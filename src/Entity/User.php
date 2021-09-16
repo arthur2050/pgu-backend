@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Role;
 use App\Entity\Group;
 
 /**
+ * @ORM\Table(name="`user`")
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
 class User
@@ -21,13 +21,13 @@ class User
 
     /**
      * @ORM\OneToOne(targetEntity=Role::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false,name="role_id", referencedColumnName="id")
+     * @ORM\JoinColumn(nullable=false,name="`role_id`")
      */
     private $role;
 
     /**
      * @ORM\OneToOne(targetEntity=Group::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=true, name="group", referencedColumnName="id")
+     * @ORM\JoinColumn(nullable=false, name="`group`")
      */
     private $group;
 

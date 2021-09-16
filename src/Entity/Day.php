@@ -2,18 +2,17 @@
 
 namespace App\Entity;
 
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=RoleRepository::class)
+ * @ORM\Entity(repositoryClass=DayRepository::class)
  */
-class Role
+class Day
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer",nullable=false)
+     * @ORM\Column(type="integer")
      */
     private $id;
 

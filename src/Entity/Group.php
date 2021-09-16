@@ -2,11 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\GroupRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=GroupRepository::class)
+ * @ORM\Entity(repositoryClass=GroupService::class)
  * @ORM\Table(name="`group`")
  */
 class Group

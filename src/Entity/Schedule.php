@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Repository\ScheduleRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,24 +22,25 @@ class Schedule
     private $group;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\OneToOne(targetEntity=Pair::class, inversedBy="schedule", cascade={"persist", "remove"})
      */
-    private $pair_number;
+    private $pair;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\OneToOne(targetEntity=Day::class, inversedBy="schedule", cascade={"persist", "remove"})
      */
-    private $day_number;
+    private $day;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Audience::class, inversedBy="schedule", cascade={"persist", "remove"})
+     */
+    private $audience;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $even;
+    private $isEven;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $odd;
 
     /**
      * @ORM\OneToOne(targetEntity=Teacher::class, inversedBy="schedule", cascade={"persist", "remove"})
@@ -48,32 +48,25 @@ class Schedule
     private $even_teacher;
 
     /**
+     * @ORM\OneToOne(targetEntity=Subject::class, inversedBy="schedule", cascade={"persist", "remove"})
+     */
+    private $even_subject;
+
+    /**
      * @ORM\OneToOne(targetEntity=Teacher::class, inversedBy="schedule", cascade={"persist", "remove"})
      */
     private $odd_teacher;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $day_name;
-
-    /**
      * @ORM\OneToOne(targetEntity=Subject::class, inversedBy="schedule", cascade={"persist", "remove"})
      */
-    private $subject;
+    private $odd_subject;
+
+
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getSubject(): ?int 
-    {
-        return $this->subject;
-    }
-    public function setSubject(int $subject): self {
-        $this->subject = $subject;
-        return $this;
     }
 
     public function getGroupNumber(): ?int
@@ -88,62 +81,50 @@ class Schedule
         return $this;
     }
 
-    public function getGroup(): ?string
+    public function getGroup(): ?Group
     {
         return $this->group;
     }
 
-    public function setGroup(string $group): self
+    public function setGroup(Group $group): self
     {
-        $this->group_name = $group;
+        $this->group = $group;
 
         return $this;
     }
 
-    public function getPairNumber(): ?int
+    public function getPair(): ?Pair
     {
-        return $this->pair_number;
+        return $this->pair;
     }
 
-    public function setPairNumber(int $pair_number): self
+    public function setPair(Pair $pair): self
     {
-        $this->pair_number = $pair_number;
+        $this->pair = $pair;
 
         return $this;
     }
 
-    public function getDayNumber(): ?int
+    public function getDay(): ?Day
     {
-        return $this->day_number;
+        return $this->day;
     }
 
-    public function setDayNumber(int $day_number): self
+    public function setDay(Day $day): self
     {
-        $this->day_number = $day_number;
+        $this->day = $day;
 
         return $this;
     }
 
-    public function getEven(): ?bool
+    public function getIsEven(): ?bool
     {
-        return $this->even;
+        return $this->isEven;
     }
 
-    public function setEven(?bool $even): self
+    public function setIsEven(?bool $even): self
     {
-        $this->even = $even;
-
-        return $this;
-    }
-
-    public function getOdd(): ?bool
-    {
-        return $this->odd;
-    }
-
-    public function setOdd(?bool $odd): self
-    {
-        $this->odd = $odd;
+        $this->isEven = $even;
 
         return $this;
     }
@@ -172,15 +153,27 @@ class Schedule
         return $this;
     }
 
-    public function getDayName(): ?string
-    {
-        return $this->day_name;
+    public function getEvenSubject(): ?Subject {
+        return $this->even_subject;
+    }
+    public function setEvenSubject(Subject $even_subject): self {
+        $this->even_subject = $even_subject;
+        return $this;
+    }
+    
+    public function getOddSubject(): ?Subject {
+        return $this->odd_subject;
+    }
+    public function setOddSubject(Subject $odd_subject): self {
+        $this->odd_subject = $odd_subject;
+        return $this;
     }
 
-    public function setDayName(string $day_name): self
-    {
-        $this->day_name = $day_name;
-
+    public function getAudience(): ?Audience {
+        return $this->audience;
+    }
+    public function setAudience(Audience $audience): self {
+        $this->audience = $audience;
         return $this;
     }
 }
