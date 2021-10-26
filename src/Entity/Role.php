@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Role
 {
+    public $perPage = 4;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -37,5 +38,12 @@ class Role
         $this->name = $name;
 
         return $this;
+    }
+
+    public function __toString() {
+        return json_encode([
+            'id' => $this->getId(),
+            'name' => $this->getName()
+        ]);
     }
 }

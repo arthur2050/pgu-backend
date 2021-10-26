@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Role;
 use App\Entity\Group;
+use JsonSerializable;
 
 /**
  * @ORM\Table(name="`user`")
@@ -20,8 +21,8 @@ class User
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity=Role::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false,name="`role_id`")
+     * @ORM\OneToOne(targetEntity="App\Entity\Role")
+     * @ORM\JoinColumn(nullable=false,name="role_id",referencedColumnName="id")
      */
     private $role;
 
@@ -98,9 +99,10 @@ class User
 
     public function __toString() {
         return json_encode([
-            'phone' => $this->phone,
+            'phone' => $this->getPhone(),
             'name' => $this->name,
             'id' => $this->id,
+            'role' => $this->getRole()
         ]);
     }
 

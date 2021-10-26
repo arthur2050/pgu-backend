@@ -2,19 +2,29 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Service\RoleService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\GroupService;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserService {
     public function __construct(
                                 EntityManagerInterface $entityManager, 
                                 RoleService $role,
-                                GroupService $group) {
+                                GroupService $group,
+                                UserRepository $userRepo) {
         $this->roleService = $role;
         $this->entityManager = $entityManager;
         $this->groupService = $group;
+        $this->userRepo = $userRepo;
     }
+
+    public function findAll() {
+        return $this->userRepo->findAll();
+    }
+
     public function create() {
         $user = new User();
         $user->setName('vanya');

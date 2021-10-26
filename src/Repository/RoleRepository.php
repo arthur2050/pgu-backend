@@ -8,6 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class RoleRepository extends ServiceEntityRepository
 {
+    public $perPage = 4;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Role::class);

@@ -14,6 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PairRepository extends ServiceEntityRepository
 {
+    public $perPage = 4;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Pair::class);

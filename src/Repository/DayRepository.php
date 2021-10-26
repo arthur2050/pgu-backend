@@ -14,6 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class DayRepository extends ServiceEntityRepository
 {
+    public $perPage = 3;
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Day::class);
