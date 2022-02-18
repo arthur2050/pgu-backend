@@ -2,55 +2,45 @@
 
 namespace App\Entity;
 
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Role;
-use App\Entity\Group;
-use JsonSerializable;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Table(name="`user`")
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="bigint")
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Role")
-     * @ORM\JoinColumn(nullable=false,name="role_id",referencedColumnName="id")
+     * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $role;
+    private $email;
 
     /**
-     * @ORM\OneToOne(targetEntity=Group::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false, name="`group`")
+     * @ORM\Column(type="json")
      */
-    private $group;
+    private $roles = [];
+
+    /**
+     * @var string The hashed password
+     * @ORM\Column(type="string")
+     */
+    private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $name;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $surname;
-
-    /** 
-     * @ORM\Column(type="string", length = 255)
-    */
-    private $email;
-
-    /** 
-     * @ORM\Column(type="string", length=255)
-     */
-    private $password;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -60,24 +50,27 @@ class User
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
+    private $surname;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
     private $avatar_path;
 
-    public function getGroup(): ?Group {
-        return $this->group;
-    }
+    /**
+     * @ORM\OneToOne(targetEntity=Role::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $role;
 
-    public function setGroup(Group $group): self {
-        $this->group = $group;
-        return $this;
-    }
+    /**
+     * @ORM\ManyToMany(targetEntity=Group::class, inversedBy="users")
+     */
+    private $group_id;
 
-    public function getEmail(): ?string {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self {
-        $this->email = $email;
-        return $this;
+    public function __construct()
+    {
+        $this->group_id = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -85,25 +78,100 @@ class User
         return $this->id;
     }
 
-    public function getRole(): ?Role
+    public function getEmail(): ?string
     {
-        return $this->role;
+        return $this->email;
     }
 
-    public function setRole(Role $role_id): self
+    public function setEmail(string $email): self
     {
-        $this->role = $role_id;
+        $this->email = $email;
 
         return $this;
     }
 
-    public function __toString() {
-        return json_encode([
-            'phone' => $this->getPhone(),
-            'name' => $this->name,
-            'id' => $this->id,
-            'role' => $this->getRole()
-        ]);
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
+    public function getUsername(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getGroups(): ArrayCollection
+    {
+        return $this->group_id;
+    }
+
+    public function setGroups(array $groups): self
+    {
+        $this->group_id = $groups;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+    
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
     public function getName(): ?string
@@ -114,27 +182,6 @@ class User
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getPassword(): ?string {
-        return $this->password;
-    }
-
-    public function setPassword($password): self {
-        $this->password = $password;
-        return $this;
-    }
-
-    public function getSurname(): ?string
-    {
-        return $this->surname;
-    }
-
-    public function setSurname(string $surname): self
-    {
-        $this->surname = $surname;
 
         return $this;
     }
@@ -151,6 +198,18 @@ class User
         return $this;
     }
 
+    public function getSurname(): ?string
+    {
+        return $this->surname;
+    }
+
+    public function setSurname(?string $surname): self
+    {
+        $this->surname = $surname;
+
+        return $this;
+    }
+
     public function getAvatarPath(): ?string
     {
         return $this->avatar_path;
@@ -159,6 +218,42 @@ class User
     public function setAvatarPath(?string $avatar_path): self
     {
         $this->avatar_path = $avatar_path;
+
+        return $this;
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    public function setRole(Role $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Group[]
+     */
+    public function getGroupId(): Collection
+    {
+        return $this->group_id;
+    }
+
+    public function addGroupId(Group $groupId): self
+    {
+        if (!$this->group_id->contains($groupId)) {
+            $this->group_id[] = $groupId;
+        }
+
+        return $this;
+    }
+
+    public function removeGroupId(Group $groupId): self
+    {
+        $this->group_id->removeElement($groupId);
 
         return $this;
     }

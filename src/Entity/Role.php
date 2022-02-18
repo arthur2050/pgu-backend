@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Role
 {
-    public $perPage = 4;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

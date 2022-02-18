@@ -5,8 +5,7 @@ use App\Entity\Role;
 use Doctrine\ORM\EntityManagerInterface;
 
 class RoleService {
-    public function __construct(string $roleData="",EntityManagerInterface $entityManager) {
-        $this->roleName = $roleData;
+    public function __construct(EntityManagerInterface $entityManager) {
         $this->entityManager = $entityManager;
     }
     public function create() {
