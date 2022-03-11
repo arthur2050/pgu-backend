@@ -51,7 +51,7 @@ class MainController extends AbstractController implements ServiceSubscriberInte
     public function __construct(EntityManagerInterface $em, 
                                 ContainerInterface $locator, 
                                 FormFactoryInterface $formFactoryInterface,
-                                GroupService $groupService, 
+                                GroupService $groupService
                                 ) {
         $this->em = $em;
         $this->locator = $locator;
