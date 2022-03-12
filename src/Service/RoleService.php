@@ -5,16 +5,16 @@ use App\Entity\Role;
 use Doctrine\ORM\EntityManagerInterface;
 
 class RoleService {
+    private $entityManager;
     public function __construct(EntityManagerInterface $entityManager) {
         $this->entityManager = $entityManager;
     }
     public function create() {
         $role = new Role();
         $role->setName('admin');
-        
-        $entityManager = $this->entityManager;
-        $entityManager->persist($role);
-        $entityManager->flush();
+
+        $this->entityManager->persist($role);
+        $this->entityManager->flush();
         
         return $role;
     }

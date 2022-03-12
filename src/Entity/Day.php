@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=DayRepository::class)
- * @ORM\Table(name="day")
+ * @ORM\Table(name="`day`")
  */
 class Day
 {

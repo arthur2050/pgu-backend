@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Form\Type\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -62,8 +63,8 @@ class UserService implements ServiceSubscriberInterface
 
     public function create(Request $request)
     {
-        $group = $this->locator->get('App\\Service\\GroupService')->create();
-        $role = $this->locator->get('App\\Service\\RoleService')->create("user");
+        $role = $this->locator->get(RoleService::class)->create();
+        $group = $this->locator->get(GroupService::class)->create();
 
         $user = new User();
 
@@ -75,7 +76,7 @@ class UserService implements ServiceSubscriberInterface
         $user->setAvatarPath($request->request->get('avatar_path') ?? null);
         $user->setGroups([$group]);
         $user->setRole($role);
-        $form = $this->formFactoryInterface->create(\App\Form\Type\UserType::class, new User());
+        $form = $this->formFactoryInterface->create(UserType::class, new User());
         //$form->handleRequest($request);
         $form->submit($request->request->all());
         if ($form->isSubmitted() && $form->isValid()) {

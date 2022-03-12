@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=PairRepository::class)
- * @ORM\Table(name="pair")
  */
 class Pair
 {

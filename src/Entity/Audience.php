@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Entity;
-use App\Repository\AudienceRepository;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="audience")
  * @ORM\Entity(repositoryClass=AudienceRepository::class)
+ * @ORM\Table(name="`audience`")
  */
 class Audience
 {

@@ -63,8 +63,6 @@ class MainController extends AbstractController implements ServiceSubscriberInte
     public static function getSubscribedServices()
     {
         return [
-        
-        
             UserService::class,
             GroupService::class,
         ];
@@ -174,7 +172,7 @@ class MainController extends AbstractController implements ServiceSubscriberInte
      * @Route("/api/login",name="api_login",methods={"POST"})
     */ 
     public function login(Request $request) {
-        $credentials = $this->locator->get('App\Service\UserService')->login($request);
+        $credentials = $this->locator->get(UserService::class)->login($request);
         if(isset($credentials)) {
             return $this->json($credentials);
         } else {
@@ -186,7 +184,7 @@ class MainController extends AbstractController implements ServiceSubscriberInte
      * @Route("/api/register",name="api_register",methods={"POST"})
     */ 
     public function register(Request $request) {
-        $user = $this->locator->get('App\Service\UserService')->create($request);
+        $user = $this->locator->get(UserService::class)->create($request);
         if($user) {
             return new Response($user);
         } else return new Response('Не удалось зарегистрироваться', 400);

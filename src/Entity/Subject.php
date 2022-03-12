@@ -5,8 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=SubjectRepository::class)
- * @ORM\Table(name="subject")
+ * @ORM\Entity(repositoryClass=SubjectRepository::class)z
  */
 class Subject
 {

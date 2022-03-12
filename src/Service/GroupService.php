@@ -5,6 +5,7 @@ use App\Entity\Group;
 use Doctrine\ORM\EntityManagerInterface;
 
 class GroupService {
+    private $entityManager;
     public function __construct(EntityManagerInterface $entityManager) {
         $this->entityManager = $entityManager;
     }
@@ -14,10 +15,9 @@ class GroupService {
         $group->setNumber(320);
         $group->setFullName('320PITEST');
         $group->setYearCreated(2019);
-        
-        $entityManager = $this->entityManager;
-        $entityManager->persist($group);
-        $entityManager->flush();
+
+        $this->entityManager->persist($group);
+        $this->entityManager->flush();
         
         return $group;
     }
