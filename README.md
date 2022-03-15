@@ -1,2 +1,2 @@
 # pgu-backend
-The project backend site of the site university PGU
+The project backend side of the site university PGU
