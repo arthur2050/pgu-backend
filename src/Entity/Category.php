@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=DayRepository::class)
- * @ORM\Table(name="`day`")
+ * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
-class Day
+class Category
 {
     /**
      * @ORM\Id
@@ -33,9 +33,9 @@ class Day
     private $updatedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity=TimeTable::class, mappedBy="day", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=News::class, inversedBy="category")
      */
-    private $timeTable;
+    private $news;
 
     public function getId(): ?int
     {
@@ -78,19 +78,14 @@ class Day
         return $this;
     }
 
-    public function getTimeTable(): ?TimeTable
+    public function getNews(): ?News
     {
-        return $this->timeTable;
+        return $this->news;
     }
 
-    public function setTimeTable(TimeTable $timeTable): self
+    public function setNews(?News $news): self
     {
-        // set the owning side of the relation if necessary
-        if ($timeTable->getDay() !== $this) {
-            $timeTable->setDay($this);
-        }
-
-        $this->timeTable = $timeTable;
+        $this->news = $news;
 
         return $this;
     }

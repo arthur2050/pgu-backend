@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
+use App\Repository\RegaliaRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=DayRepository::class)
- * @ORM\Table(name="`day`")
+ * @ORM\Entity(repositoryClass=RegaliaRepository::class)
  */
-class Day
+class Regalia
 {
     /**
      * @ORM\Id
@@ -18,7 +18,7 @@ class Day
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,  columnDefinition="ENUM('Candidate_economic_ciences', 'Department_head', 'Candidate_technical_sciences', 'Candidate_pedagogical_sciences', 'Leading_specialist')")
      */
     private $name;
 
@@ -33,9 +33,9 @@ class Day
     private $updatedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity=TimeTable::class, mappedBy="day", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Lecturer::class, inversedBy="regalias")
      */
-    private $timeTable;
+    private $lecturer;
 
     public function getId(): ?int
     {
@@ -78,19 +78,14 @@ class Day
         return $this;
     }
 
-    public function getTimeTable(): ?TimeTable
+    public function getLecturer(): ?Lecturer
     {
-        return $this->timeTable;
+        return $this->lecturer;
     }
 
-    public function setTimeTable(TimeTable $timeTable): self
+    public function setLecturer(?Lecturer $lecturer): self
     {
-        // set the owning side of the relation if necessary
-        if ($timeTable->getDay() !== $this) {
-            $timeTable->setDay($this);
-        }
-
-        $this->timeTable = $timeTable;
+        $this->lecturer = $lecturer;
 
         return $this;
     }

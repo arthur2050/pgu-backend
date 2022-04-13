@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
+use App\Repository\TypeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=DayRepository::class)
- * @ORM\Table(name="`day`")
+ * @ORM\Entity(repositoryClass=TypeRepository::class)
  */
-class Day
+class Type
 {
     /**
      * @ORM\Id
@@ -23,6 +23,16 @@ class Day
     private $name;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $value;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $markerColor;
+
+    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $createdAt;
@@ -33,7 +43,7 @@ class Day
     private $updatedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity=TimeTable::class, mappedBy="day", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=TimeTable::class, mappedBy="type", cascade={"persist", "remove"})
      */
     private $timeTable;
 
@@ -50,6 +60,30 @@ class Day
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getValue(): ?string
+    {
+        return $this->value;
+    }
+
+    public function setValue(string $value): self
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    public function getMarkerColor(): ?string
+    {
+        return $this->markerColor;
+    }
+
+    public function setMarkerColor(?string $markerColor): self
+    {
+        $this->markerColor = $markerColor;
 
         return $this;
     }
@@ -86,8 +120,8 @@ class Day
     public function setTimeTable(TimeTable $timeTable): self
     {
         // set the owning side of the relation if necessary
-        if ($timeTable->getDay() !== $this) {
-            $timeTable->setDay($this);
+        if ($timeTable->getType() !== $this) {
+            $timeTable->setType($this);
         }
 
         $this->timeTable = $timeTable;

@@ -3,7 +3,8 @@
 namespace App\Service;
 
 use App\Entity\User;
-use App\Form\Type\UserType;
+use App\Exceptions\FormValidationException;
+use App\Form\Type\UserRegistrationType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -11,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -63,27 +63,27 @@ class UserService implements ServiceSubscriberInterface
 
     public function create(Request $request)
     {
-        $role = $this->locator->get(RoleService::class)->create();
-        $group = $this->locator->get(GroupService::class)->create();
-
         $user = new User();
-
-        $user->setName($request->request->get('name') ?? null);
-        $user->setPhone($request->request->get('phone') ?? null);
-        $user->setEmail($request->request->get('email'));
-        $user->setSurname($request->request->get('surname') ?? null);
-        $user->setPassword($this->passwordHasher->hashPassword($user, $request->request->get('password')));
-        $user->setAvatarPath($request->request->get('avatar_path') ?? null);
-        $user->setGroups([$group]);
-        $user->setRole($role);
-        $form = $this->formFactoryInterface->create(UserType::class, new User());
-        //$form->handleRequest($request);
+        $form = $this->formFactoryInterface->create(UserRegistrationType::class, $user);
+//        $form->handleRequest($request);
         $form->submit($request->request->all());
+
+
+
+//        $user->setName($request->request->get('name') ?? null);
+//        $user->setPhone($request->request->get('phone') ?? null);
+//        $user->setEmail($request->request->get('email'));
+//        $user->setSurname($request->request->get('surname') ?? null);
+//        $user->setPassword($this->passwordHasher->hashPassword($user, $request->request->get('password')));
+//        $user->setAvatarPath($request->request->get('avatar_path') ?? null);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($user);
             $this->entityManager->flush();
             return json_encode($user);
-        } else new HttpException(401, 'Неверные данные для регистрации');
+        } else {
+            throw new FormValidationException($form);
+        }
     }
 
     public function login(Request $request)

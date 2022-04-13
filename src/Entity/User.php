@@ -58,19 +58,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $avatar_path;
 
     /**
-     * @ORM\OneToOne(targetEntity=Role::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity=Lecturer::class, mappedBy="user", cascade={"persist", "remove"})
      */
-    private $role;
+    private $lecturer;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Group::class, inversedBy="users")
+     * @ORM\OneToOne(targetEntity=Group::class, mappedBy="headman", cascade={"persist", "remove"})
      */
-    private $group_id;
+    private $associatedHeadmanGroup;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Group::class, inversedBy="students")
+     */
+    private $associatedGroup;
+
+    /**
+     * @ORM\OneToOne(targetEntity=TimeTable::class, mappedBy="deletionAuthor", cascade={"persist", "remove"})
+     */
+    private $timeTable;
+
+    /**
+     * @ORM\Column(type="string", length=5)
+     */
+    private $lang;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $patronymic;
 
     public function __construct()
     {
-        $this->group_id = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -123,18 +142,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
-        return $this;
-    }
-
-    public function getGroups(): ArrayCollection
-    {
-        return $this->group_id;
-    }
-
-    public function setGroups(array $groups): self
-    {
-        $this->group_id = $groups;
 
         return $this;
     }
@@ -222,39 +229,96 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRole(): ?Role
+    public function getLecturer(): ?Lecturer
     {
-        return $this->role;
+        return $this->lecturer;
     }
 
-    public function setRole(Role $role): self
+    public function setLecturer(Lecturer $lecturer): self
     {
-        $this->role = $role;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Group[]
-     */
-    public function getGroupId(): Collection
-    {
-        return $this->group_id;
-    }
-
-    public function addGroupId(Group $groupId): self
-    {
-        if (!$this->group_id->contains($groupId)) {
-            $this->group_id[] = $groupId;
+        // set the owning side of the relation if necessary
+        if ($lecturer->getUser() !== $this) {
+            $lecturer->setUser($this);
         }
 
+        $this->lecturer = $lecturer;
+
         return $this;
     }
 
-    public function removeGroupId(Group $groupId): self
+    public function getAssociatedHeadmanGroup(): ?Group
     {
-        $this->group_id->removeElement($groupId);
+        return $this->associatedHeadmanGroup;
+    }
+
+    public function setAssociatedHeadmanGroup(Group $associatedHeadmanGroup): self
+    {
+        // set the owning side of the relation if necessary
+        if ($associatedHeadmanGroup->getHeadman() !== $this) {
+            $associatedHeadmanGroup->setHeadman($this);
+        }
+
+        $this->associatedHeadmanGroup = $associatedHeadmanGroup;
 
         return $this;
     }
+
+    public function getAssociatedGroup(): ?Group
+    {
+        return $this->associatedGroup;
+    }
+
+    public function setAssociatedGroup(?Group $associatedGroup): self
+    {
+        $this->associatedGroup = $associatedGroup;
+
+        return $this;
+    }
+
+    public function getTimeTable(): ?TimeTable
+    {
+        return $this->timeTable;
+    }
+
+    public function setTimeTable(?TimeTable $timeTable): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($timeTable === null && $this->timeTable !== null) {
+            $this->timeTable->setDeletionAuthor(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($timeTable !== null && $timeTable->getDeletionAuthor() !== $this) {
+            $timeTable->setDeletionAuthor($this);
+        }
+
+        $this->timeTable = $timeTable;
+
+        return $this;
+    }
+
+    public function getLang(): ?string
+    {
+        return $this->lang;
+    }
+
+    public function setLang(string $lang): self
+    {
+        $this->lang = $lang;
+
+        return $this;
+    }
+
+    public function getPatronymic(): ?string
+    {
+        return $this->patronymic;
+    }
+
+    public function setPatronymic(?string $patronymic): self
+    {
+        $this->patronymic = $patronymic;
+
+        return $this;
+    }
+
 }

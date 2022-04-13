@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
+use App\Repository\SpecialtyRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=DayRepository::class)
- * @ORM\Table(name="`day`")
+ * @ORM\Entity(repositoryClass=SpecialtyRepository::class)
  */
-class Day
+class Specialty
 {
     /**
      * @ORM\Id
@@ -33,9 +33,9 @@ class Day
     private $updatedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity=TimeTable::class, mappedBy="day", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Direction::class, inversedBy="specialties")
      */
-    private $timeTable;
+    private $direction;
 
     public function getId(): ?int
     {
@@ -78,20 +78,16 @@ class Day
         return $this;
     }
 
-    public function getTimeTable(): ?TimeTable
+    public function getDirection(): ?Direction
     {
-        return $this->timeTable;
+        return $this->direction;
     }
 
-    public function setTimeTable(TimeTable $timeTable): self
+    public function setDirection(?Direction $direction): self
     {
-        // set the owning side of the relation if necessary
-        if ($timeTable->getDay() !== $this) {
-            $timeTable->setDay($this);
-        }
-
-        $this->timeTable = $timeTable;
+        $this->direction = $direction;
 
         return $this;
     }
+
 }

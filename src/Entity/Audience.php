@@ -27,6 +27,11 @@ class Audience
      */
     private $capacity;
 
+    /**
+     * @ORM\OneToOne(targetEntity=TimeTable::class, mappedBy="audience", cascade={"persist", "remove"})
+     */
+    private $timeTable;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +57,23 @@ class Audience
     public function setCapacity(?int $capacity): self
     {
         $this->capacity = $capacity;
+
+        return $this;
+    }
+
+    public function getTimeTable(): ?TimeTable
+    {
+        return $this->timeTable;
+    }
+
+    public function setTimeTable(TimeTable $timeTable): self
+    {
+        // set the owning side of the relation if necessary
+        if ($timeTable->getAudience() !== $this) {
+            $timeTable->setAudience($this);
+        }
+
+        $this->timeTable = $timeTable;
 
         return $this;
     }

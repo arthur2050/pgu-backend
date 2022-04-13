@@ -25,28 +25,57 @@ class Group
     private $name;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\OneToOne(targetEntity=Lecturer::class, inversedBy="associatedGroup", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $number;
+    private $curator;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="associatedHeadmanGroup", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $full_name;
+    private $headman;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\OneToOne(targetEntity=Direction::class, inversedBy="associatedStudentsGroup", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $year_created;
+    private $direction;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="group_id")
+     * @ORM\OneToOne(targetEntity=StudyVariant::class, inversedBy="associatedStudentsGroup", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $users;
+    private $studyVariant;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="associatedGroup")
+     */
+    private $students;
+
+    /**
+     * @ORM\OneToOne(targetEntity=TimeTable::class, mappedBy="associatedGroup", cascade={"persist", "remove"})
+     */
+    private $timeTable;
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+        $this->students = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -66,38 +95,86 @@ class Group
         return $this;
     }
 
-    public function getNumber(): ?int
+    public function getCurator(): ?Lecturer
     {
-        return $this->number;
+        return $this->curator;
     }
 
-    public function setNumber(int $number): self
+    public function setCurator(Lecturer $curator): self
     {
-        $this->number = $number;
+        $this->curator = $curator;
 
         return $this;
     }
 
-    public function getFullName(): ?string
+    public function getHeadman(): ?User
     {
-        return $this->full_name;
+        return $this->headman;
     }
 
-    public function setFullName(string $full_name): self
+    public function setHeadman(User $headman): self
     {
-        $this->full_name = $full_name;
+        $this->headman = $headman;
 
         return $this;
     }
 
-    public function getYearCreated(): ?int
+    public function getDirection(): ?Direction
     {
-        return $this->year_created;
+        return $this->direction;
     }
 
-    public function setYearCreated(int $year_created): self
+    public function setDirection(Direction $direction): self
     {
-        $this->year_created = $year_created;
+        $this->direction = $direction;
+
+        return $this;
+    }
+
+    public function getStudyVariant(): ?StudyVariant
+    {
+        return $this->studyVariant;
+    }
+
+    public function setStudyVariant(StudyVariant $studyVariant): self
+    {
+        $this->studyVariant = $studyVariant;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -105,26 +182,46 @@ class Group
     /**
      * @return Collection|User[]
      */
-    public function getUsers(): Collection
+    public function getStudents(): Collection
     {
-        return $this->users;
+        return $this->students;
     }
 
-    public function addUser(User $user): self
+    public function addStudent(User $student): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->addGroupId($this);
+        if (!$this->students->contains($student)) {
+            $this->students[] = $student;
+            $student->setAssociatedGroup($this);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public function removeStudent(User $student): self
     {
-        if ($this->users->removeElement($user)) {
-            $user->removeGroupId($this);
+        if ($this->students->removeElement($student)) {
+            // set the owning side to null (unless already changed)
+            if ($student->getAssociatedGroup() === $this) {
+                $student->setAssociatedGroup(null);
+            }
         }
+
+        return $this;
+    }
+
+    public function getTimeTable(): ?TimeTable
+    {
+        return $this->timeTable;
+    }
+
+    public function setTimeTable(TimeTable $timeTable): self
+    {
+        // set the owning side of the relation if necessary
+        if ($timeTable->getAssociatedGroup() !== $this) {
+            $timeTable->setAssociatedGroup($this);
+        }
+
+        $this->timeTable = $timeTable;
 
         return $this;
     }

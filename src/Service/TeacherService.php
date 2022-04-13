@@ -1,7 +1,6 @@
 <?php 
 namespace App\Service;
 
-use App\Entity\Teacher;
 use Doctrine\ORM\EntityManagerInterface;
 
 class TeacherService {
