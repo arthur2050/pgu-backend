@@ -55,7 +55,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $avatar_path;
+    private $avatarPath;
 
     /**
      * @ORM\OneToOne(targetEntity=Lecturer::class, mappedBy="user", cascade={"persist", "remove"})
@@ -80,12 +80,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=5)
      */
-    private $lang;
+    private $lang = 'ru';
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $patronymic;
+
+    /**
+     * @ORM\OneToOne(targetEntity=UserInterfaceSettings::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $interfaceSettings;
 
     public function __construct()
     {
@@ -219,12 +225,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getAvatarPath(): ?string
     {
-        return $this->avatar_path;
+        return $this->avatarPath;
     }
 
-    public function setAvatarPath(?string $avatar_path): self
+    public function setAvatarPath(?string $avatarPath): self
     {
-        $this->avatar_path = $avatar_path;
+        $this->avatarPath = $avatarPath;
 
         return $this;
     }
@@ -317,6 +323,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPatronymic(?string $patronymic): self
     {
         $this->patronymic = $patronymic;
+
+        return $this;
+    }
+
+    public function getInterfaceSettings(): ?UserInterfaceSettings
+    {
+        return $this->interfaceSettings;
+    }
+
+    public function setInterfaceSettings(UserInterfaceSettings $interfaceSettings): self
+    {
+        $this->interfaceSettings = $interfaceSettings;
 
         return $this;
     }
