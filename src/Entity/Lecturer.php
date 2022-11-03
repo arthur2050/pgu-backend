@@ -95,6 +95,11 @@ class Lecturer
      */
     private $timeTable;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $publicationsText;
+
     public function __construct()
     {
         $this->education = new ArrayCollection();
@@ -328,6 +333,18 @@ class Lecturer
         }
 
         $this->timeTable = $timeTable;
+
+        return $this;
+    }
+
+    public function getPublicationsText(): ?string
+    {
+        return $this->publicationsText;
+    }
+
+    public function setPublicationsText(?string $publicationsText): self
+    {
+        $this->publicationsText = $publicationsText;
 
         return $this;
     }

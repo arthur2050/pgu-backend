@@ -19,4 +19,6 @@ class LecturerRepository extends ServiceEntityRepository
         parent::__construct($registry, Lecturer::class);
     }
 
+
+
 }

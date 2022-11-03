@@ -100,6 +100,8 @@ class UserService implements ServiceSubscriberInterface
         $form->submit($request->request->all());
         if ($form->isSubmitted() && $form->isValid()) {
             $foundUser = $this->userRepository->findOneBy(['id' => $userId]);
+//            $foundUser->setPassword('test1234');
+//            $foundUser->setPassword($this->passwordHasher->hashPassword($foundUser, $foundUser->getPassword()));
             /*** @var $foundUserInterfaceSettings UserInterfaceSettings ** */
             $foundUserInterfaceSettings = $foundUser->getInterfaceSettings();
             $foundUserInterfaceSettings->setColorFilters($userInterfaceSettings->getColorFilters());
@@ -131,7 +133,7 @@ class UserService implements ServiceSubscriberInterface
 
         $form->submit($request->request->all());
         if ($form->isSubmitted() && $form->isValid()) {
-            $changeableUser->setPassword('');
+
             if(!strcmp($mode,'return_without_save')) {
                 return $changeableUser;
             }
@@ -139,6 +141,7 @@ class UserService implements ServiceSubscriberInterface
                 $this->entityManager->persist($changeableUser);
                 $this->entityManager->flush();
             }
+            $changeableUser->setPassword('');
             return $changeableUser;
         } else {
             throw new FormValidationException($form);

@@ -24,3 +24,7 @@ services:
         arguments:
             $targetDirectory: '%upload_directory%'
         public: true
+
+    App\Services\RFPGUApi\GuzzleApiRequestService:
+        arguments:
+            $baseUrl: 'http://rfpgu.ru'

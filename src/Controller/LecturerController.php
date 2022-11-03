@@ -71,6 +71,7 @@ class LecturerController extends AbstractController
     public function edit(Request $request, $idLecturer)
     {
         try {
+//            dump($idLecturer);die();
             $response = $this->locator->get(LecturerService::class)->edit($request, $idLecturer);
             return $this->json(
                 [

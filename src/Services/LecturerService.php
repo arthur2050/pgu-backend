@@ -65,11 +65,12 @@ class LecturerService
     public function edit(Request $request, int $idLecturer)
     {
         $lecturer  = $this->lecturerRepository->findOneBy(['id' => $idLecturer]);
+
         $foundLecturer = clone $lecturer;
 
         $form = $this->formFactoryInterface->create(LecturerEditFormType::class, $lecturer);
         $form->submit($request->request->all());
-
+//        dump($lecturer); die();
         if ($form->isSubmitted() && $form->isValid()) {
             $userEmail = $lecturer->getUser()->getEmail();
             $userId = $lecturer->getUser()->getId();
@@ -123,5 +124,10 @@ class LecturerService
             $lecturer->getUser()->setPassword('');
         }
         return $lecturers;
+    }
+
+    public function savePublication($lecturerId, $publicationText)
+    {
+
     }
 }

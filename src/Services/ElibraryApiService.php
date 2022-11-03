@@ -49,6 +49,8 @@ class ElibraryApiService
         $respGetUrlData = (string)$urlData3;
         $resp = (string) $urlData2;
         $htmlString = (string)$urlData;
+
+        dump($resp);die();
         //add this line to suppress any warnings
         libxml_use_internal_errors(true);
         $doc = new DOMDocument();
