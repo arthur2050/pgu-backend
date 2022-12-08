@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {# Run `composer require symfony/webpack-encore-bundle`
+           and uncomment the following Encore helpers to start using Symfony UX #}
+        {% block stylesheets %}
+            {#{{ encore_entry_link_tags('app') }}#}
+        {% endblock %}
+
+        {% block javascripts %}
+            {#{{ encore_entry_script_tags('app') }}#}
+        {% endblock %}
+    </head>
+    <body>
+    {{values}}
+        <form method="POST"> 
+            {% for el in names %}
+            <div> 
+                <label>{{names[loop.index - 1]}}</label>
+                <input name="{{el}}">
+            </div>
+            {% endfor %}
+            <input type="submit" value="Изменить данные">
+        </form>
+
+        <form action="/{{table}}/{{id}}/delete" method="POST">
+            <input type="submit" value="Удалить модель">
+        </form>
+    </body>
+</html>

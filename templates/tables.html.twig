@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {# Run `composer require symfony/webpack-encore-bundle`
+           and uncomment the following Encore helpers to start using Symfony UX #}
+        {% block stylesheets %}
+            {#{{ encore_entry_link_tags('app') }}#}
+        {% endblock %}
+
+        {% block javascripts %}
+            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.22.0/axios.js"> </script>
+            {#{{ encore_entry_script_tags('app') }}#}
+            <script type="text/javascript" defer> 
+                async function getTables(name) {
+                    await axios.get('http://127.0.0.1:8000/table/' + name).then(res => {
+                    document.getElementsByClassName('table_content')[0].innerHTML = res.data
+                })
+                }
+            </script>
+        {% endblock %}
+    </head>
+    <body>
+    Выберите таблицу
+        {% for el in tables %}
+         <div onclick="getTables('{{el}}')" class="table_link"> {{el}} </div>
+        {% endfor %}
+        <div class="table_content"> </div>
+    --------------------
+    </body>
+</html>
