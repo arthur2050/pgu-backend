@@ -28,3 +28,8 @@ services:
     App\Services\RFPGUApi\GuzzleApiRequestService:
         arguments:
             $baseUrl: 'http://rfpgu.ru'
+
+    App\Controller\ParserController:
+          arguments:
+              - '@App\Services\ElibraryHelperService'
+              - '@App\Services\RFPGUApi\RFPGUParserHelperService'

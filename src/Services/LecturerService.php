@@ -13,7 +13,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class LecturerService
+class LecturerService implements CrudServiceInterface
 {
     private $entityManager;
     private $lecturerRepository;
@@ -56,13 +56,13 @@ class LecturerService
             }
             $this->entityManager->persist($lecturer);
             $this->entityManager->flush();
-            return true;
+            return $lecturer;
         } else {
             throw new FormValidationException($form);
         }
     }
 
-    public function edit(Request $request, int $idLecturer)
+    public function edit(Request $request, $idLecturer)
     {
         $lecturer  = $this->lecturerRepository->findOneBy(['id' => $idLecturer]);
 
@@ -74,7 +74,7 @@ class LecturerService
         if ($form->isSubmitted() && $form->isValid()) {
             $userEmail = $lecturer->getUser()->getEmail();
             $userId = $lecturer->getUser()->getId();
-            $user = $this->userService->saveUserProfile($request, $userId , $userEmail , 'return_without_save');
+            $user = $this->userService->edit($request, $userId , $userEmail , 'return_without_save');
             $avatarPathFile = $request->files->get('avatarPath');
             if (isset($avatarPathFile)) {
                 $avatarPath = $this->fileUploaderService->upload($avatarPathFile);
@@ -91,13 +91,13 @@ class LecturerService
             }
             $this->entityManager->persist($lecturer);
             $this->entityManager->flush();
-            return true;
+            return $lecturer;
         } else {
             throw new FormValidationException($form);
         }
     }
 
-    public function delete(int $idLecturer)
+    public function delete($idLecturer)
     {
         $deletedLecturer = $this->lecturerRepository->findOneBy(['id' => $idLecturer]);
         if ($deletedLecturer) {

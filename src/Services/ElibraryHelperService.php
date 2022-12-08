@@ -3,11 +3,13 @@
 
 namespace App\Services;
 
+use App\Services\RFPGUApi\ParserHelperInterface;
+
 /**
  * Class ElibraryHelperService
  * @package App\Services
  */
-class ElibraryHelperService
+class ElibraryHelperService implements ParserHelperInterface
 {
     private $elibraryApiService;
 

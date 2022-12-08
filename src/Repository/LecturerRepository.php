@@ -21,4 +21,15 @@ class LecturerRepository extends ServiceEntityRepository
 
 
 
+    public function getCurators()
+    {
+        $builder = $this->createQueryBuilder('lecturer');
+
+        $builder->select('lecturer')
+            ->where('lecturer.isCurator = 1')
+        ;
+
+        return $builder->getQuery()->getResult();
+    }
+
 }

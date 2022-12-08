@@ -4,19 +4,27 @@
 namespace App\Form\Type;
 
 
+use App\DataTransformer\StringToArrayTransformer;
 use App\Entity\Lecturer;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class LecturerEditFormType extends AbstractType
 {
+    private $stringToArrayTransformer;
+
+    public function __construct(StringToArrayTransformer $stringToArrayTransformer)
+    {
+        $this->stringToArrayTransformer = $stringToArrayTransformer;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -64,7 +72,13 @@ class LecturerEditFormType extends AbstractType
             ])
             ->add('diplomaProjectsCount', IntegerType::class, [
                 'required' => false,
-            ]);
+            ])
+            ->add('roles', TextType::class, [
+                'property_path' => 'user.roles'
+            ])
+        ;
+
+        $builder->get('roles')->addModelTransformer($this->stringToArrayTransformer);
     }
 
     /**

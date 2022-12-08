@@ -35,4 +35,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->persist($user);
         $this->_em->flush();
     }
+
+    public function getHeadmen()
+    {
+        $builder = $this->createQueryBuilder('user');
+
+        $builder->select('user')
+            ->where('user.isHeadmen = 1')
+        ;
+
+        return $builder->getQuery()->getResult();
+    }
 }

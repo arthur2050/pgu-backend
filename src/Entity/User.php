@@ -14,6 +14,20 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    private static $rolesExist = [
+        'ROLE_USER',
+        'ROLE_LECTURER',
+        'ROLE_ADMIN',
+        'ROLE_CURATOR',
+    ];
+
+    private static $languagesExist = [
+        'ru',
+        'md',
+        'ua',
+        'en'
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -177,7 +191,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return null;
     }
-    
+
     /**
      * @see UserInterface
      */
@@ -339,4 +353,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public static function getRolesExist()
+    {
+        return self::$rolesExist;
+    }
+
+    public static function getLanguagesExist()
+    {
+        return self::$languagesExist;
+    }
 }
