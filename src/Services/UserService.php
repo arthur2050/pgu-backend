@@ -102,7 +102,7 @@ class UserService implements  CrudServiceInterface
             $foundUserInterfaceSettings->setSelectedImage($foundUserInterfaceSettings->getSelectedImage());
             $this->entityManager->persist($foundUser);
             $this->entityManager->flush();
-            return true;
+            return $foundUser;
         } else {
             throw new FormValidationException($form);
         }

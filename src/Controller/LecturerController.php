@@ -24,7 +24,7 @@ class LecturerController extends AbstractController
     }
 
     /**
-     * @Route("api/lecturer/all/", methods={"GET"})
+     * @Route("api/lecturers", methods={"GET"})
      */
     public function getAll()
     {

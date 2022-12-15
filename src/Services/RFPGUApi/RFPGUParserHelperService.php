@@ -109,18 +109,10 @@ class RFPGUParserHelperService implements ParserHelperInterface
             $lecturer = array_merge($lecturer,['url' => $this->urlsLecturers[$lecturerNumber]]);
 
             $text = $this->getLecturerPublicationText($lecturer);
-            if($text === false) { // If we didn't have lecturer with the publications, this situation is possible
-//                $fullData = implode(' ', $lecturer);
-               // throw new HttpException(400, "Can't find al least one correspond text to: $fullData");
-            }
 
-//            $savedLecturer = $this->setLecturerPublicationText($lecturer, $text);
-//            if($savedLecturer === false) {
-//                $fullData = implode(' ', $lecturer);
-//                throw new HttpException(400, "Unable to save the lecturer: $fullData");
-//            }
+            $savedLecturer = $this->setLecturerPublicationText($lecturer, $text);
 
-            $lecturers[] = $text;
+            $lecturers[] = $savedLecturer;
         }
 
         return $lecturers;

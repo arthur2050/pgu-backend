@@ -41,7 +41,14 @@ class RFPGUParserService implements ParserInterface
         $text = $xpathPublications[0]->textContent;
 
         if(preg_match('/(Публикац.{1}.{1}|[нН]аучн.{1}.{1}\s*(труд|раб)).+(<br>{1,3}|\s*[абв]?\s*)\)\s*(учеб)|(Публикац.{1}.{1}).*/ui', $text,$matches)){
-          return  $matches[0]; // 0 is the most relevant
+            $text = $matches[0];
+            $textBegin = substr($text, 0,80);
+            $textBegin = preg_replace('/(Публикац.{1}.{1}|[нН]аучн.{1}.{1}\s*(труд|раб{1,3}))/i','', $textBegin);
+            $textEnd = substr($text, -1,80);
+            $textEnd = preg_replace('/(<br>{1,3}|\s*[абв]?\s*)\)\s*(учеб)/i','', $textEnd);
+            $text = substr_replace($text, $textBegin, 0, 80);
+            $text = substr_replace($text, $textEnd, -1, 80);
+          return  $text; // 0 is the most relevant
         } //if the expression is satisfied with us result the do something logic
 
         return false;

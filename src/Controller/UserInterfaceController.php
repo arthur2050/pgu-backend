@@ -42,7 +42,9 @@ class UserInterfaceController extends AbstractController
     {
         try {
             return $this->json(
-                $this->locator->get(UserService::class)->saveUserInterfaceSettings($request, $userId)
+                [
+                    'user' => $this->locator->get(UserService::class)->saveUserInterfaceSettings($request, $userId)
+                ]
             );
         } catch (FormValidationException $exception) {
             return new Response($exception->getErrorsResponse(), $exception->getCode());
